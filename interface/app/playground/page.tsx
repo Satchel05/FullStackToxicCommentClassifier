@@ -13,15 +13,6 @@ import { useEffect, useState } from 'react';
 
 import { Comment } from '@/types';
 
-const DEFAULT_COMMENT: Comment = {
-  id: 0,
-  comment: '',
-  toxicityPrediction: false,
-  timestamp: new Date(),
-  author: '',
-  profileImgPath: 'profilePictures/mrfox.jpg',
-};
-
 const SORT_OPTIONS = ['Ascending', 'Descending'];
 
 const STATIC_COMMENTS = [

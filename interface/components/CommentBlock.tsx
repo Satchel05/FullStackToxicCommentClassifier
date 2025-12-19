@@ -17,6 +17,7 @@ import { Button } from './ui/button';
 import { ChevronUp, ChevronDown, MessageCircle, Dot } from 'lucide-react';
 
 import { Comment } from '@/types';
+import NewCommentForm from './NewCommentForm';
 
 // use this util function for display
 const getTimeSince = (timestamp: Date): string => {
@@ -57,6 +58,7 @@ export default function CommentBlock({
   profileImgPath,
 }: Comment) {
   const [currTime, setCurrTime] = useState(new Date());
+  const [showInput, setShowInput] = useState(false);
 
   // use to update time every minute
   useEffect(() => {
@@ -68,8 +70,12 @@ export default function CommentBlock({
     return () => clearInterval(interval);
   }, []);
 
+  const handleEmbeddedComment = () => {
+    setShowInput(true);
+  };
+
   return (
-    <Card className='gap-1 border-0 shadow-none bg-transparent '>
+    <Card className='border-0 shadow-none bg-transparent'>
       <CardHeader className='pl-0 pr-6 flex flex-row items-center'>
         <div className='relative w-10 h-10 mr-3 shrink-0'>
           <Image
@@ -81,29 +87,45 @@ export default function CommentBlock({
         </div>
         <CardTitle>{author}</CardTitle>
         <CardDescription>
-          <div className='flex flex-row items-center'>
-            <Dot />
-            {getTimeSince(timestamp)}
+          <div className='flex flex-row justify-center items-center'>
+            {/* <Dot /> */} {getTimeSince(timestamp)}
           </div>
         </CardDescription>
       </CardHeader>
-      <div className='pl-[37px] flex flex-col gap-5'>
+      <div className='pl-[37px] flex flex-col gap-3 group'>
         <CardContent>
           <p>{comment}</p>
         </CardContent>
-        <CardFooter className='flex flex-row items-center gap-5'>
-          <Button
-            variant='ghost'
-            className='flex flex-row items-center gap-1 h-8 rounded-full'>
+        <CardFooter className='flex flex-row items-center gap-1'>
+          {/* <Button
+            variant='outline'
+            className='flex flex-row items-center gap h-7'>
             <ChevronUp className='h-5 w-5 text-gray-400' />
             <span className='text-black'>15</span>
             <ChevronDown className='h-5 w-5 text-gray-400' />
-          </Button>
+          </Button> */}
 
-          <button className='flex flex-row items-center gap-2 group transition-all hover:text-blue-500'>
-            <MessageCircle className='h-5 w-5 text-gray-400 group-hover:text-blue-500 transition-all' />
-            <span className='text-sm font-medium text-gray-400'>Reply</span>
-          </button>
+          <div className='flex flex-col gap-3'>
+            <Button
+              onClick={handleEmbeddedComment}
+              variant='outline'
+              // opacity-0 group-hover:opacity-100 transition-opacity
+              className='flex flex-row items-center h-7 w-fit w-fit'>
+              <span className='text-sm font-medium text-gray-800'>Reply</span>
+            </Button>
+
+            {showInput && (
+              <div className='w-full max-w-3xl gap-2'>
+                <NewCommentForm
+                  addComment={handleEmbeddedComment}
+                  isEmbedded={true}
+                  showInput={showInput}
+                  setShowInput={setShowInput}
+                  parentComment={}
+                />
+              </div>
+            )}
+          </div>
         </CardFooter>
       </div>
     </Card>
