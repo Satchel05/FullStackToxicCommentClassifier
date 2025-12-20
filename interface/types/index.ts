@@ -12,6 +12,8 @@ export type Comment = {
   reactions?: {
     upvotes: number;
     downvotes: number;
+    userUpvotes: string[];
+    userDownvotes: string[];
   };
   isEdited: boolean;
   editedAt?: number;
