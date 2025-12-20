@@ -100,4 +100,44 @@ export class CommentStorage {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
     return comment;
   }
+
+  static toggleDownvote(id: string, userId: string): Comment | null {
+    const all = this.getAllComments();
+    const comment = all.find((c) => c.id === id);
+    if (!comment) {
+      return null;
+    }
+
+    if (!comment.reactions) {
+      comment.reactions = {
+        upvotes: 0,
+        downvotes: 0,
+        userDownvotes: [],
+        userUpvotes: [],
+      };
+    }
+
+    const { reactions } = comment;
+    const hasUpvoted = reactions.userUpvotes.includes(userId);
+    const hasDownvoted = reactions.userDownvotes.includes(userId);
+
+    if (hasUpvoted) {
+      return null;
+    }
+
+    if (hasDownvoted) {
+      // undo upvote
+      reactions.downvotes -= 1;
+      reactions.userDownvotes = reactions.userDownvotes.filter(
+        (u) => u !== userId
+      );
+    } else {
+      // continue with upvote
+      reactions.downvotes += 1;
+      reactions.userDownvotes.push(userId);
+    }
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+    return comment;
+  }
 }

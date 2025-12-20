@@ -14,6 +14,7 @@ interface CommentStore {
   deleteComment: (id: string, deleteReplies?: boolean) => void;
   loadCommentThread: (rootId: string) => Comment[];
   toggleUpvote: (id: string, userId: string) => void;
+  toggleDownvote: (id: string, userId: string) => void;
 }
 
 export const useCommentStore = create<CommentStore>((set, get) => ({
@@ -50,6 +51,13 @@ export const useCommentStore = create<CommentStore>((set, get) => ({
 
   toggleUpvote: (id, userId) => {
     const toggledComment = CommentStorage.toggleUpvote(id, userId);
+    if (toggledComment) {
+      set({ comments: CommentStorage.getAllComments() });
+    }
+  },
+
+  toggleDownvote: (id, userId) => {
+    const toggledComment = CommentStorage.toggleDownvote(id, userId);
     if (toggledComment) {
       set({ comments: CommentStorage.getAllComments() });
     }
