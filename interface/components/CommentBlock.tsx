@@ -14,6 +14,10 @@ import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useState } from 'react';
 import { NewCommentForm } from './NewCommentForm';
 import { Textarea } from './ui/textarea';
+import { ButtonGroup } from './ui/button-group';
+import { ChevronUp, ChevronDown } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Image from 'next/image';
 
 const CommentBlock = ({ comment }: { comment: Comment }) => {
   const loadCommentThread = useCommentStore((state) => state.loadCommentThread);
@@ -33,51 +37,68 @@ const CommentBlock = ({ comment }: { comment: Comment }) => {
 
   return (
     <>
-      <Card>
+      <Card className='border-none shadow-none bg-transparent'>
         <CardHeader>
-          <CardTitle>{comment.author.name}</CardTitle>
-          <CardDescription>{comment.timestamp}</CardDescription>
+          <div className='flex flex-row items-center text-lg gap-x-4'>
+            <Image
+              alt='profile picture'
+              height={100}
+              width={100}
+              src={user.avatar}
+              className='h-12 w-12 rounded-full object-cover'
+            />
+            <CardTitle>{comment.author.name}</CardTitle>
+            <CardDescription>{comment.timestamp}</CardDescription>
+          </div>
         </CardHeader>
-        <CardContent>
-          {isEditing ? (
-            <form onSubmit={handleSubmit}>
-              <Textarea
-                value={text}
-                onChange={(e) => setText(e.target.value)}></Textarea>
+        <CardContent className='ml-15 text-base/6'>
+          <div className='flex flex-row'>
+            <ButtonGroup
+              orientation='vertical'
+              className='text-center font-semibold text-2xl flex flex-col py-0'>
               <Button
+                variant='ghost'
+                size='icon'
                 onClick={() => {
-                  setIsEditing(false);
+                  toggleUpvote(comment.id, user.id);
                 }}>
-                Cancel
+                <ChevronUp className='h-8 w-8' />
               </Button>
-              <Button type='submit'>Post</Button>
-            </form>
-          ) : (
-            <p>{comment.text}</p>
-          )}
+              <span>
+                {comment.reactions
+                  ? comment.reactions.upvotes - comment.reactions.downvotes
+                  : '0'}
+              </span>
+              <Button
+                variant='ghost'
+                size='icon'
+                onClick={() => {
+                  toggleDownvote(comment.id, user.id);
+                }}>
+                <ChevronDown className='h-8 w-8' />
+              </Button>
+            </ButtonGroup>
+            {isEditing ? (
+              <form onSubmit={handleSubmit}>
+                <Textarea
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}></Textarea>
+                <Button
+                  onClick={() => {
+                    setIsEditing(false);
+                  }}>
+                  Cancel
+                </Button>
+                <Button type='submit'>Post</Button>
+              </form>
+            ) : (
+              <p>{comment.text}</p>
+            )}
+          </div>
         </CardContent>
         <CardFooter>
           {comment.isEdited ? '(Edited)' : ''}
-          {comment.reactions?.upvotes || 0}
-          {comment.reactions?.downvotes || 0}
-          <Button
-            onClick={() => {
-              toggleUpvote(comment.id, user.id);
-            }}>
-            Upvote
-          </Button>
-          <Button
-            onClick={() => {
-              toggleDownvote(comment.id, user.id);
-            }}>
-            Downvote
-          </Button>
-          <Button
-            onClick={() => {
-              setIsReplying(true);
-            }}>
-            Reply
-          </Button>
+
           <CommentDropdown
             setIsEditing={setIsEditing}
             setIsReplying={setIsReplying}

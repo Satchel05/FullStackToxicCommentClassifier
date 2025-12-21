@@ -1,5 +1,5 @@
-import { CommentsList } from '@/components/CommentsList';
+import { CommentsSidebar } from '@/components/CommentSidebar';
 
 export default function Home() {
-  return <CommentsList />;
+  return <CommentsSidebar />;
 }

@@ -5,7 +5,7 @@ import { NewCommentForm } from '@/components/NewCommentForm';
 export default function Playground() {
   return (
     <>
-      <NewCommentForm />
+      <NewCommentForm parentId={null} />
       <CommentsList />
     </>
   );
