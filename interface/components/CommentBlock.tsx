@@ -1,12 +1,4 @@
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { useCommentStore } from '@/stores/useCommentStore';
 import { Comment } from '@/types';
 import { CommentDropdown } from './CommentDropdown';
@@ -15,8 +7,12 @@ import { useState } from 'react';
 import { NewCommentForm } from './NewCommentForm';
 import { Textarea } from './ui/textarea';
 import { ButtonGroup } from './ui/button-group';
-import { ChevronUp, ChevronDown } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  IconArrowBigUpFilled,
+  IconArrowBigDownFilled,
+} from '@tabler/icons-react';
+import { ArrowBigUp, ArrowBigDown, Triangle } from 'lucide-react';
+import { formatDistanceToNow } from 'date-fns';
 import Image from 'next/image';
 
 const CommentBlock = ({ comment }: { comment: Comment }) => {
@@ -37,80 +33,99 @@ const CommentBlock = ({ comment }: { comment: Comment }) => {
 
   return (
     <>
-      <Card className='border-none shadow-none bg-transparent'>
-        <CardHeader>
-          <div className='flex flex-row items-center text-lg gap-x-4'>
+      <article className='py-3'>
+        {/* Header: Avatar + Author + Timestamp */}
+        <header className='mb-3'>
+          <div className='flex items-center gap-x-4'>
             <Image
               alt='profile picture'
               height={100}
               width={100}
               src={user.avatar}
-              className='h-12 w-12 rounded-full object-cover'
+              className='h-9 w-9 rounded-full object-cover'
             />
-            <CardTitle>{comment.author.name}</CardTitle>
-            <CardDescription>{comment.timestamp}</CardDescription>
+            <div className='flex items-baseline gap-x-2'>
+              <h3 className='text-base font-semibold leading-none text-foreground'>
+                {comment.author.name}
+              </h3>
+              <time className='text-xs text-muted-foreground'>
+                {formatDistanceToNow(new Date(comment.timestamp), {
+                  addSuffix: true,
+                })}
+                <span> {comment.isEdited ? '(Edited)' : ''}</span>
+              </time>
+            </div>
           </div>
-        </CardHeader>
-        <CardContent className='ml-15 text-base/6'>
-          <div className='flex flex-row'>
-            <ButtonGroup
-              orientation='vertical'
-              className='text-center font-semibold text-2xl flex flex-col py-0'>
-              <Button
-                variant='ghost'
-                size='icon'
-                onClick={() => {
-                  toggleUpvote(comment.id, user.id);
-                }}>
-                <ChevronUp className='h-8 w-8' />
-              </Button>
-              <span>
-                {comment.reactions
-                  ? comment.reactions.upvotes - comment.reactions.downvotes
-                  : '0'}
-              </span>
-              <Button
-                variant='ghost'
-                size='icon'
-                onClick={() => {
-                  toggleDownvote(comment.id, user.id);
-                }}>
-                <ChevronDown className='h-8 w-8' />
-              </Button>
-            </ButtonGroup>
-            {isEditing ? (
-              <form onSubmit={handleSubmit}>
-                <Textarea
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}></Textarea>
+        </header>
+
+        {/* Content: Comment text or edit form */}
+        <div className='mb-3 text-foreground'>
+          {isEditing ? (
+            <form
+              onSubmit={handleSubmit}
+              className='space-y-2'>
+              <Textarea
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+              />
+              <div className='flex gap-2'>
                 <Button
+                  variant='outline'
                   onClick={() => {
                     setIsEditing(false);
                   }}>
                   Cancel
                 </Button>
                 <Button type='submit'>Post</Button>
-              </form>
-            ) : (
-              <p>{comment.text}</p>
-            )}
+              </div>
+            </form>
+          ) : (
+            <p className='text-foreground leading-6'>{comment.text}</p>
+          )}
+        </div>
+
+        {/* Footer: Voting + Actions */}
+        <footer className='flex items-center'>
+          <div className='inline-flex items-center gap-2 bg-gray-100 border border-gray-200 rounded-full px-3 py-1.5'>
+            <button
+              onClick={() => {
+                toggleUpvote(comment.id, user.id);
+              }}>
+              <Triangle
+                size={17}
+                className='fill-primary text-primary'
+              />
+            </button>
+            <span className='text-gray-700 text-sm font-medium tabular-nums'>
+              {comment.reactions
+                ? comment.reactions.upvotes - comment.reactions.downvotes
+                : '0'}
+            </span>
+            <button
+              onClick={() => {
+                toggleDownvote(comment.id, user.id);
+              }}>
+              <Triangle
+                size={17}
+                rotate={90}
+                className='rotate-180 fill-primary text-primary'
+              />
+            </button>
           </div>
-        </CardContent>
-        <CardFooter>
-          {comment.isEdited ? '(Edited)' : ''}
 
           <CommentDropdown
             setIsEditing={setIsEditing}
             setIsReplying={setIsReplying}
             comment={comment}
           />
-        </CardFooter>
-      </Card>
+        </footer>
+      </article>
 
       {isReplying && <NewCommentForm parentId={comment.id} />}
 
       {replies.length > 0 && (
-        <div className='ml-8'>
+        <div className='ml-14'>
+          {/* <ThreadLine /> */}
           {replies.map((reply) => (
             <CommentBlock
               key={reply.id}

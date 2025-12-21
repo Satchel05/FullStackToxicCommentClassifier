@@ -15,14 +15,16 @@ const CommentsList = () => {
   const topLevelComments = comments.filter((c) => !c.parentId);
 
   return (
-    <div>
-      {topLevelComments.map((c) => (
-        <CommentBlock
-          key={c.id}
-          comment={c}
-        />
-      ))}
-    </div>
+    <>
+      <div className='p-10'>
+        {topLevelComments.map((c) => (
+          <CommentBlock
+            key={c.id}
+            comment={c}
+          />
+        ))}
+      </div>
+    </>
   );
 };
 
