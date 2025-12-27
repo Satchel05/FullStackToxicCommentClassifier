@@ -2,7 +2,8 @@
 import { useState, useEffect } from 'react';
 import { useCommentStore } from '@/stores/useCommentStore';
 import { CommentBlock } from './CommentBlock';
-import { shallow } from 'zustand/shallow';
+import { CommentWithContextMenu } from './CommentWithContextMenu';
+import type { CommentBlockProps } from './CommentBlock';
 
 const CommentsList = () => {
   const loadComments = useCommentStore((state) => state.loadComments);
@@ -18,7 +19,7 @@ const CommentsList = () => {
     <>
       <div className='p-10'>
         {topLevelComments.map((c) => (
-          <CommentBlock
+          <CommentWithContextMenu
             key={c.id}
             comment={c}
           />

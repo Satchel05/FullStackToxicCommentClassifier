@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { createCommentInput } from '@/types';
 
-const NewCommentForm = ({ parentId }) => {
+const NewCommentForm = ({ parentId, isReplying, setShowNested }) => {
   const addComment = useCommentStore((state) => state.addComment);
   const [text, setText] = useState('');
   const user = useCurrentUser();
@@ -28,10 +28,17 @@ const NewCommentForm = ({ parentId }) => {
     };
 
     addComment(newComment);
+
+    if (isReplying) {
+      setShowNested(true);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form
+      onSubmit={handleSubmit}
+      // className='w-fit border-2'
+    >
       <Textarea
         onChange={(e) => setText(e.target.value)}
         placeholder='Start typing your comment here...'></Textarea>
