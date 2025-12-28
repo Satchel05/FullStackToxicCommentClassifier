@@ -59,7 +59,7 @@ const CommentBlock = ({
               alt='profile picture'
               height={100}
               width={100}
-              src={user.avatar}
+              src={comment.author.avatar || '/profilePictures/mrfox.jpg'}
               className='h-8 w-8 rounded-full object-cover'
             />
             <div className='flex items-baseline gap-x-3'>

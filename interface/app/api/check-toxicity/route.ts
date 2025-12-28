@@ -6,6 +6,8 @@ export async function POST(req: Request) {
     headers: { 'Content-Type': 'application/json' },
     // send json as text to backend which till parse into a Python List
     body: JSON.stringify({ text }),
+  }).catch((err) => {
+    console.log(`Error on ML backend: ${err}`);
   });
 
   // translate back into json

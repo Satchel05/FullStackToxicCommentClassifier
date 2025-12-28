@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { Inter, Lora } from 'next/font/google';
 import './globals.css';
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-import { CommentsSidebar } from '@/components/CommentSidebar';
+// import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+// import { CommentsSidebar } from '@/components/CommentSidebar';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -27,11 +27,11 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={`${inter.variable} ${lora.variable} antialiased`}>
-        <SidebarProvider>
-          <CommentsSidebar />
-          <SidebarTrigger />
-          {children}
-        </SidebarProvider>
+        {/* <SidebarProvider> */}
+        {/* <CommentsSidebar /> */}
+        {/* <SidebarTrigger /> */}
+        {children}
+        {/* </SidebarProvider> */}
       </body>
     </html>
   );

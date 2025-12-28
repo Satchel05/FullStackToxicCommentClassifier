@@ -17,13 +17,15 @@ const CommentsList = () => {
 
   return (
     <>
-      <div className='p-10'>
-        {topLevelComments.map((c) => (
-          <CommentWithContextMenu
-            key={c.id}
-            comment={c}
-          />
-        ))}
+      <div className='p-10flex flex-col items-center'>
+        <div className='max-w-2xl'>
+          {topLevelComments.map((c) => (
+            <CommentWithContextMenu
+              key={c.id}
+              comment={c}
+            />
+          ))}
+        </div>
       </div>
     </>
   );
